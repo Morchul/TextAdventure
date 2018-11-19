@@ -2,9 +2,11 @@ package com.mochul.testadventure.object;
 
 import com.mochul.testadventure.actions.Action;
 import com.mochul.testadventure.actions.CanDoAction;
+import com.mochul.testadventure.place.Child;
+import com.mochul.testadventure.place.Everything;
 import com.mochul.testadventure.place.Location;
 
-public abstract class Item implements CanDoAction, Everything {
+public abstract class Item implements CanDoAction, Child {
 
     private long ID;
     private String name;
@@ -19,8 +21,9 @@ public abstract class Item implements CanDoAction, Everything {
         this.ID = ID;
         this.name = name;
         this.actions = new Action[countOfActions];
-        setParentPlace(parentLocation);
-        setDescription(defaultDescription);
+        this.parentLocation = parentLocation;
+        this.parentLocation.addItem(this);
+        description = defaultDescription;
     }
 
     public String getName(){
@@ -29,14 +32,6 @@ public abstract class Item implements CanDoAction, Everything {
 
     public long getID(){
         return ID;
-    }
-
-    @Override
-    public boolean canDoAction(Action action) {
-        for(Action a: actions){
-            if(a == action) return true;
-        }
-        return false;
     }
 
     @Override
@@ -57,13 +52,8 @@ public abstract class Item implements CanDoAction, Everything {
         actions[actionIndex++] = action;
     }
 
-    public Location getParentPlace(){
+    public Location getParentLocation(){
         return parentLocation;
-    }
-
-    private void setParentPlace(Location parentLocation){
-        this.parentLocation = parentLocation;
-        this.parentLocation.addItem(this);
     }
 
     @Override
@@ -78,11 +68,11 @@ public abstract class Item implements CanDoAction, Everything {
 
     @Override
     public String getDetailedDescription() {
-        return description;
+        return null;
     }
 
     @Override
     public void setDetailedDescription(String detailedDescription) {
-        this.description = detailedDescription;
+
     }
 }

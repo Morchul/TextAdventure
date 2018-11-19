@@ -5,7 +5,6 @@ import com.mochul.testadventure.ui.Output;
 
 public interface CanDoAction {
 
-    boolean canDoAction(Action action);
     boolean act(Player player, Command command, Output output);
     boolean hasAction(Action action);
 

@@ -1,7 +1,7 @@
 package com.mochul.testadventure.actions;
 
 import com.mochul.testadventure.place.Location;
-import com.mochul.testadventure.place.LocationConnection;
+import com.mochul.testadventure.place.PlaceConnection;
 import com.mochul.testadventure.place.Place;
 import com.mochul.testadventure.place.Position;
 
@@ -11,11 +11,11 @@ public class ActionInterpreter {
 
     }
 
-    public LocationConnection interpretLeaveAction(Command command, Location currentPlace){
-        LocationConnection connection;
+    public Location interpretLeaveAction(Command command, Location currentPlace){
+        Location connection;
         Place p = null;
         if(currentPlace instanceof Position){
-            p = currentPlace.getParentLocation();
+            p = ((Position)currentPlace).getParentPlace();
         } else if(currentPlace instanceof Place){
             p = ((Place) currentPlace);
         }
@@ -28,12 +28,12 @@ public class ActionInterpreter {
         return connection; //TODO leave action
     }
 
-    public LocationConnection interpretGoAction(Command command, Location currentPlace){
+    public Location interpretGoAction(Command command, Location currentPlace){
         Place p = null;
-        LocationConnection connection;
+        Location connection;
 
         if(currentPlace instanceof Position){
-            p = currentPlace.getParentLocation();
+            p = ((Position)currentPlace).getParentPlace();
         } else if(currentPlace instanceof Place){
             p = ((Place) currentPlace);
         }
@@ -43,13 +43,13 @@ public class ActionInterpreter {
         }
 
         if(command.subject.equalsIgnoreCase("north")){
-            connection = p.getNorth();
+            connection = p.getNorth().getPlace();
         } else if(command.subject.equalsIgnoreCase("south")){
-            connection = p.getSouth();
+            connection = p.getSouth().getPlace();
         } else if(command.subject.equalsIgnoreCase("east")){
-            connection = p.getEast();
+            connection = p.getEast().getPlace();
         } else if(command.subject.equalsIgnoreCase("west")){
-            connection = p.getWest();
+            connection = p.getWest().getPlace();
         } else {
             connection = p.canGoTo(command.subject);
         }

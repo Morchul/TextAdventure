@@ -2,10 +2,9 @@ package com.mochul.testadventure.place;
 
 import com.mochul.testadventure.actions.Action;
 import com.mochul.testadventure.actions.CanDoAction;
-import com.mochul.testadventure.object.Everything;
 import com.mochul.testadventure.object.Item;
 
-public abstract class Position implements Location, CanDoAction {
+public abstract class Position implements Location, CanDoAction, Child {
 
     private long ID;
     private String name;
@@ -20,22 +19,22 @@ public abstract class Position implements Location, CanDoAction {
     private Item[] items;
     private int objectIndex = 0;
 
-    public Position(long ID, String name, int countOfActions, int countOfObjects, Place parentPosition, String defaultDescription) {
+    public Position(long ID, String name, int countOfActions, int countOfObjects, Place parentPlace) {
         this.ID = ID;
         this.name = name;
         this.actions = new Action[countOfActions];
         this.items = new Item[countOfObjects];
-        setParentLocation(parentPosition);
-        setDescription(defaultDescription);
+        this.parentLocation = parentPlace;
+        this.parentLocation.addPosition(this);
+        description = "";
+        detailedDescription = "";
     }
 
     @Override
     public boolean canDoAction(Action action) {
-        for(Action a : actions){
-            if(a == action) return true;
-        }
+        if(hasAction(action)) return true;
         for(Item item : items){
-            if(item.canDoAction(action)) return true;
+            if(item.hasAction(action)) return true;
         }
         return false;
     }
@@ -50,6 +49,7 @@ public abstract class Position implements Location, CanDoAction {
 
     @Override
     public CanDoAction getActionObject(String name) {
+        if(name.equalsIgnoreCase(this.name)) return this;
         for(Item item : items){
             if(item.getName().equalsIgnoreCase(name)) return item;
         }
@@ -87,19 +87,12 @@ public abstract class Position implements Location, CanDoAction {
     }
 
     @Override
-    public Everything[] getChildren() {
+    public Child[] getChildren() {
         return items;
     }
 
-    @Override
-    public Place getParentLocation() {
+    public Place getParentPlace() {
         return parentLocation;
-    }
-
-    @Override
-    public void setParentLocation(Place parentLocation) {
-        this.parentLocation = parentLocation;
-        this.parentLocation.addChild(this);
     }
 
     @Override
@@ -112,12 +105,12 @@ public abstract class Position implements Location, CanDoAction {
         this.description = description;
     }
 
-    @Override
+
     public String getDetailedDescription() {
         return detailedDescription;
     }
 
-    @Override
+
     public void setDetailedDescription(String detailedDescription) {
         this.detailedDescription = detailedDescription;
     }

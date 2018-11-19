@@ -1,7 +1,8 @@
 package com.mochul.testadventure.actions;
 
 import com.mochul.testadventure.DescriptionCreator;
-import com.mochul.testadventure.place.LocationConnection;
+import com.mochul.testadventure.place.Location;
+import com.mochul.testadventure.place.PlaceConnection;
 import com.mochul.testadventure.place.Place;
 import com.mochul.testadventure.place.Position;
 import com.mochul.testadventure.player.Player;
@@ -17,18 +18,18 @@ public class ActionExecutor {
         this.player = player;
     }
 
-    public void goAction(boolean successful, LocationConnection con, Command command){
+    public void goAction(boolean successful, Location con, Command command){
         if(successful){
-            if(con.getPlace() instanceof Place){
+            if(con instanceof Place){
                 output.printPlaceText("Go to " + command.subject);
-                output.printPlaceText(DescriptionCreator.createDescription(con.getPlace().getDescription(), con.getPlace().getChildren()));
-                ((Place)con.getPlace()).goToThisPlace(player, command, output);
-            } else if(con.getPlace() instanceof Position){
+                output.printPlaceText(DescriptionCreator.createDescription(con.getDescription(), con.getChildren()));
+                ((Place)con).goToThisPlace(player, command, output);
+            } else if(con instanceof Position){
                 output.printPositionText("Go to " + command.subject);
-                output.printPositionText(DescriptionCreator.createDescription(con.getPlace().getDescription(), con.getPlace().getChildren()));
-                ((Position)con.getPlace()).act(player, command, output);
+                output.printPositionText(DescriptionCreator.createDescription(((Position) con).getDetailedDescription(), con.getChildren()));
+                ((Position)con).act(player, command, output);
             }
-            player.setCurrentPosition(con.getPlace());
+            player.setCurrentPosition(con);
 
         } else {
             output.printInfoText("Can't go to " + command.subject);

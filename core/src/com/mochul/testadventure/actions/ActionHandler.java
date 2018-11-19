@@ -1,8 +1,7 @@
 package com.mochul.testadventure.actions;
 
 import com.mochul.testadventure.place.Location;
-import com.mochul.testadventure.place.LocationConnection;
-import com.mochul.testadventure.place.Place;
+import com.mochul.testadventure.place.PlaceConnection;
 import com.mochul.testadventure.player.Player;
 import com.mochul.testadventure.ui.Output;
 
@@ -30,10 +29,10 @@ public class ActionHandler {
         Location cp = player.getCurrentPosition();
 
         if(command.action == Action.GO) {
-            LocationConnection con = interpreter.interpretGoAction(command, cp);
-            executor.goAction(con != null && con.passable, con, command);
+            Location con = interpreter.interpretGoAction(command, cp);
+            executor.goAction(con != null, con, command);
         } else if(command.action == Action.LEAVE){
-            LocationConnection con = interpreter.interpretLeaveAction(command, cp);
+            Location con = interpreter.interpretLeaveAction(command, cp);
             executor.leafAction(); //TODO leave action
         }
 

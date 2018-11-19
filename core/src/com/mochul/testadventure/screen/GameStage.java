@@ -9,11 +9,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.mochul.testadventure.Assets;
-import com.mochul.testadventure.DescriptionCreator;
 import com.mochul.testadventure.actions.Action;
 import com.mochul.testadventure.actions.ActionHandler;
 import com.mochul.testadventure.actions.Command;
-import com.mochul.testadventure.object.Item;
 import com.mochul.testadventure.place.*;
 import com.mochul.testadventure.player.Player;
 import com.mochul.testadventure.ui.ConsoleOutput;
@@ -52,43 +50,40 @@ public class GameStage implements Screen, GameScreen {
 
         actionHandler = new ActionHandler(output, player);
 
-        Place place = new Place(IDs.START_PLACE, "StartPlace", 0, 2, 0,0);
-        Place place2 = new Place(IDs.SECOND_PLACE, "SecondPlace", 1, 2, 0, 1);
-        final Place forest = new Place(IDs.FOREST, "Forest", 0, 3, 1, 2);
-        LocationConnection.connectPlaces(place, place2, true);
-        LocationConnection.connectPlaces(place, forest, true);
-        LocationConnection.connectPlaces(place2, forest, true);
-        place.setSouth(place.getPlaceToGo(0));
-        place.setWest(place.getPlaceToGo(1));
-        place2.setNorth(place2.getPlaceToGo(0));
-        forest.setSouth(forest.getPlaceToGo(1));
+        Place place = new Place(IDs.START_PLACE, "StartPlace", 0, 1, 0);
+        final Place forest = new Place(IDs.FOREST, "Forest", 0, 2, 1);
+        PlaceConnection.connectPlaces(place, forest, true);
+        place.setWest(place.getPlaceToGo(0));
         forest.setEast(forest.getPlaceToGo(0));
 
-        final Place forestHouse = new Place(IDs.FOREST_HOUSE, "ForestHouse", 0, 1, 0, 0);
-        LocationConnection.connectPlaces(forestHouse, forest, false);
-        forestHouse.setParentLocation(forest);
+        forest.setDescription("You are in a dark forest. {}");
 
-        Position position = new Position(IDs.BEFORE_FOREST_HOUSE, "Door", 1, 0, forest, "a solid closed [Door] ") {
+        final Place forestHouse = new Place(IDs.FOREST_HOUSE, "ForestHouse", 0, 1, 0);
+        PlaceConnection.connectPlaces(forestHouse, forest, false);
+
+        Position position = new Position(IDs.BEFORE_FOREST_HOUSE, "ForestHouseDoor", 2, 0, forest) {
             @Override
             public boolean act(Player player, Command command, Output output) {
                 if(command.action == Action.OPEN) {
                     output.printInfoText("You open the door");
-                    setDescription("a solid open [Door] ");
-                    forest.getPlaceToGo(2).passable = true;
+                    setDescription("There is a [ForestHouse] with a opened [Door]");
+                    forest.getPlaceToGo(1).passable = true;
                     forestHouse.getPlaceToGo(0).passable = true;
                     return true;
                 } else if(command.action == Action.CLOSE) {
                     output.printInfoText("You close the door");
-                    setDescription("a solid closed [Door] ");
-                    forest.getPlaceToGo(2).passable = false;
+                    setDescription("There is a [ForestHouse] with a closed [Door]");
+                    forest.getPlaceToGo(1).passable = false;
                     forestHouse.getPlaceToGo(0).passable = false;
                     return true;
                 }
                 return false;
             }
         };
+        position.setDescription("There is a [ForestHouse] with a closed [Door]");
+        position.setDetailedDescription("This is a very solid Door");
         position.addAction(Action.OPEN);
-        forest.addPosition(position);
+        position.addAction(Action.CLOSE);
 
         setStartLocationOfPlayer(place);
 
