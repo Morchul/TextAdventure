@@ -22,7 +22,7 @@ public abstract class Item implements CanDoAction, Child {
         this.name = name;
         this.actions = new Action[countOfActions];
         this.parentLocation = parentLocation;
-        this.parentLocation.addItem(this);
+//        this.parentLocation.addItem(this);
         description = defaultDescription;
     }
 

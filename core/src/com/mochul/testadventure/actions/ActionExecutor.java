@@ -1,9 +1,8 @@
 package com.mochul.testadventure.actions;
 
 import com.mochul.testadventure.DescriptionCreator;
-import com.mochul.testadventure.place.Location;
-import com.mochul.testadventure.place.PlaceConnection;
 import com.mochul.testadventure.place.Place;
+import com.mochul.testadventure.place.PlacePosition;
 import com.mochul.testadventure.place.Position;
 import com.mochul.testadventure.player.Player;
 import com.mochul.testadventure.ui.Output;
@@ -18,25 +17,29 @@ public class ActionExecutor {
         this.player = player;
     }
 
-    public void goAction(boolean successful, Location con, Command command){
-        if(successful){
-            if(con instanceof Place){
-                output.printPlaceText("Go to " + command.subject);
-                output.printPlaceText(DescriptionCreator.createDescription(con.getDescription(), con.getChildren()));
-                ((Place)con).goToThisPlace(player, command, output);
-            } else if(con instanceof Position){
-                output.printPositionText("Go to " + command.subject);
-                output.printPositionText(DescriptionCreator.createDescription(((Position) con).getDetailedDescription(), con.getChildren()));
-                ((Position)con).act(player, command, output);
+    public boolean executeGoAction(Position nextPosition, Command command){
+        if(nextPosition instanceof PlacePosition){
+            nextPosition.act(player, command, output);
+
+            if(nextPosition.passable){
+                Place p = ((PlacePosition) nextPosition).getPlace();
+                p.goToThisPlace(player, command, output);
+                player.setCurrentPosition(p);
+            } else {
+                output.printInfoText("Can't go to " + command.subject);
             }
-            player.setCurrentPosition(con);
 
         } else {
-            output.printInfoText("Can't go to " + command.subject);
+            if(nextPosition.passable) {
+                output.printPositionText(nextPosition.getDetailedDescription());
+                nextPosition.act(player, command, output);
+                player.setCurrentPosition(nextPosition);
+            } else {
+                output.printInfoText("Can't go to " + command.subject);
+            }
         }
+        return false;
     }
 
-    public void leafAction(){
 
-    }
 }

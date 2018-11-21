@@ -4,7 +4,7 @@ import com.mochul.testadventure.actions.Action;
 import com.mochul.testadventure.actions.CanDoAction;
 import com.mochul.testadventure.object.Item;
 
-public abstract class Position implements Location, CanDoAction, Child {
+public abstract class Position implements PositionInterface {
 
     private long ID;
     private String name;
@@ -15,6 +15,8 @@ public abstract class Position implements Location, CanDoAction, Child {
 
     private Action[] actions;
     private int actionIndex = 0;
+
+    public boolean passable;
 
     private Item[] items;
     private int objectIndex = 0;
@@ -28,6 +30,7 @@ public abstract class Position implements Location, CanDoAction, Child {
         this.parentLocation.addPosition(this);
         description = "";
         detailedDescription = "";
+        passable = true;
     }
 
     @Override

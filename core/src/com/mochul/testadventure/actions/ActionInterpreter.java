@@ -1,59 +1,42 @@
 package com.mochul.testadventure.actions;
 
 import com.mochul.testadventure.place.Location;
-import com.mochul.testadventure.place.PlaceConnection;
 import com.mochul.testadventure.place.Place;
+import com.mochul.testadventure.place.PlacePosition;
 import com.mochul.testadventure.place.Position;
+import com.mochul.testadventure.player.Player;
+import com.mochul.testadventure.ui.Output;
 
 public class ActionInterpreter {
 
-    public ActionInterpreter(){
+    private Output output;
+    private Player player;
 
+    public ActionInterpreter(Output output, Player player) {
+        this.output= output;
+        this.player = player;
     }
 
-    public Location interpretLeaveAction(Command command, Location currentPlace){
-        Location connection;
+    public Position goAction(Command command){
+        Location currentLocation = player.getCurrentPosition();
         Place p = null;
-        if(currentPlace instanceof Position){
-            p = ((Position)currentPlace).getParentPlace();
-        } else if(currentPlace instanceof Place){
-            p = ((Place) currentPlace);
+
+        if(currentLocation instanceof Place){
+            p = (Place)currentLocation;
+        } else if(currentLocation instanceof Position){
+            p = ((Position)currentLocation).getParentPlace();
         }
 
-        if(p == null){
-            return null;
-        }
+        if(p == null) return null;
 
-        connection = p.canGoTo(command.subject);
-        return connection; //TODO leave action
+        Position pos;
+        if(command.subject.equalsIgnoreCase("north")) pos = p.getNorth();
+        else if(command.subject.equalsIgnoreCase("south")) pos = p.getSouth();
+        else if(command.subject.equalsIgnoreCase("west")) pos = p.getWest();
+        else if(command.subject.equalsIgnoreCase("east")) pos = p.getEast();
+        else pos = p.canGoTo(command.subject);
+
+        if(pos == null) return null;
+        return pos;
     }
-
-    public Location interpretGoAction(Command command, Location currentPlace){
-        Place p = null;
-        Location connection;
-
-        if(currentPlace instanceof Position){
-            p = ((Position)currentPlace).getParentPlace();
-        } else if(currentPlace instanceof Place){
-            p = ((Place) currentPlace);
-        }
-
-        if(p == null){
-            return null;
-        }
-
-        if(command.subject.equalsIgnoreCase("north")){
-            connection = p.getNorth().getPlace();
-        } else if(command.subject.equalsIgnoreCase("south")){
-            connection = p.getSouth().getPlace();
-        } else if(command.subject.equalsIgnoreCase("east")){
-            connection = p.getEast().getPlace();
-        } else if(command.subject.equalsIgnoreCase("west")){
-            connection = p.getWest().getPlace();
-        } else {
-            connection = p.canGoTo(command.subject);
-        }
-        return connection;
-    }
-
 }

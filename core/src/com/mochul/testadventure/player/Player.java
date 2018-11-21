@@ -1,6 +1,5 @@
 package com.mochul.testadventure.player;
 
-
 import com.mochul.testadventure.place.Location;
 
 public class Player {

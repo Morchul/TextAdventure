@@ -10,6 +10,8 @@ public interface IDs {
 
     //Position IDs
     long BEFORE_FOREST_HOUSE = 1;
+    long CON_START_PLACE_FOREST = 2;
+    long CON_FOREST_START_PLACE = 3;
 
     //Item IDs
     long FOREST_HOUSE_DOOR = 1;

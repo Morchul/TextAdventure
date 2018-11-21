@@ -19,21 +19,19 @@ public class Place implements Location {
     private Position[] positions;
     private int positionIndex = 0;
 
-    private PlaceConnection[] placesToGo;
-    private int placesToGoIndex = 0;
-
     private Child[] children;
     private int childIndex = 0;
 
-    private PlaceConnection north;
-    private PlaceConnection south;
-    private PlaceConnection west;
-    private PlaceConnection east;
+    private PlacePosition north;
+    private PlacePosition south;
+    private PlacePosition west;
+    private PlacePosition east;
 
-    public Place(long ID, String name, int countOfItems, int countOfPlacesToGo, int countOfPositions) {
+    private PlacePosition leavePosition;
+
+    public Place(long ID, String name, int countOfItems, int countOfPositions) {
         this.ID = ID;
         this.items = new Item[countOfItems];
-        this.placesToGo = new PlaceConnection[countOfPlacesToGo];
         this.positions = new Position[countOfPositions];
         this.children = new Child[countOfItems + countOfPositions];
         this.name = name;
@@ -41,7 +39,7 @@ public class Place implements Location {
     }
 
     public void goToThisPlace(Player player, Command command, Output output){
-        //output.printPlaceText("GO_TO_THIS_PLACE_" +  name);
+        output.printPlaceText(description);
     }
 
     @Override
@@ -55,16 +53,19 @@ public class Place implements Location {
         return false;
     }
 
-    public Location canGoTo(String locationName){
-        for(PlaceConnection con : placesToGo){
-            if(con.getPlace().getName().equalsIgnoreCase(locationName)){
-                if(con.passable)
-                    return con.getPlace();
-                else
-                    return null;
-            }
+    public Position canLeave(String name){
+        if(name.equalsIgnoreCase(this.name)){
+            if(leavePosition != null)
+                return leavePosition;
         }
+        return null;
+    }
 
+    public void setLeavePosition(PlacePosition pp){
+        this.leavePosition = pp;
+    }
+
+    public Position canGoTo(String locationName){
         for(Position pos: positions){
             if(pos.getName().equalsIgnoreCase(locationName)){
                 return pos;
@@ -121,43 +122,35 @@ public class Place implements Location {
         addChild(position);
     }
 
-    public void addPlaceToGo(PlaceConnection connection){
-        placesToGo[placesToGoIndex++] = connection;
-    }
-
-    public PlaceConnection getPlaceToGo(int i){
-        return placesToGo[i];
-    }
-
-    public PlaceConnection getNorth() {
+    public PlacePosition getNorth() {
         return north;
     }
 
-    public void setNorth(PlaceConnection north) {
+    public void setNorth(PlacePosition north) {
         this.north = north;
     }
 
-    public PlaceConnection getSouth() {
+    public PlacePosition getSouth() {
         return south;
     }
 
-    public void setSouth(PlaceConnection south) {
+    public void setSouth(PlacePosition south) {
         this.south = south;
     }
 
-    public PlaceConnection getWest() {
+    public PlacePosition getWest() {
         return west;
     }
 
-    public void setWest(PlaceConnection west) {
+    public void setWest(PlacePosition west) {
         this.west = west;
     }
 
-    public PlaceConnection getEast() {
+    public PlacePosition getEast() {
         return east;
     }
 
-    public void setEast(PlaceConnection east) {
+    public void setEast(PlacePosition east) {
         this.east = east;
     }
 

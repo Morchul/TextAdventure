@@ -9,13 +9,11 @@ public class Map {
     private Place[] places;
     private Position[] positions;
     private Item[] items;
-    private PlaceConnection[] placeConnections;
 
     private Map(){
-        places = new Place[];
-        positions = new Position[];
-        items = new Item[];
-        placeConnections = new PlaceConnection[];
+//        places = new Place[];
+//        positions = new Position[];
+//        items = new Item[];
     }
 
     public static Map createMap(String fileName){
@@ -38,14 +36,6 @@ public class Map {
         for(Item i : items){
             if(i.getID() == id){
                 return i;
-            }
-        }
-        return null;
-    }
-    public PlaceConnection searchPlaceConnection(long id){
-        for(PlaceConnection con : placeConnections){
-            if(con.getID() == id){
-                return con;
             }
         }
         return null;
