@@ -5,10 +5,11 @@ public enum Action {
     TAKE(1, "nimm", "nehme", "nehmen"),
     GO(1, "gehe", "gehen", "geh", "go"),
     USE(1, "benutze", "benutzen"),
-    LEAVE(1, "verlass", "verlassen", "verlasse"),
+    LEAVE(1, "verlass", "verlassen", "verlasse", "leave"),
     OPEN(1, "oeffne", "open"),
     CLOSE(1, "schliesse", "close"),
     READ(1, "lies", "lese"),
+    LOOK(1, "look", "schauen", "schau"),
     UNKNOWN(1);
 
     private String[] actions;

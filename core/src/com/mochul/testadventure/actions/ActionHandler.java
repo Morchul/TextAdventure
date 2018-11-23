@@ -1,6 +1,7 @@
 package com.mochul.testadventure.actions;
 
 import com.mochul.testadventure.place.Location;
+import com.mochul.testadventure.place.PlacePosition;
 import com.mochul.testadventure.place.Position;
 import com.mochul.testadventure.player.Player;
 import com.mochul.testadventure.ui.Output;
@@ -35,11 +36,17 @@ public class ActionHandler {
                 }
             } else
                 output.printInfoText("Can't go to " + command.subject);
+        } else if(command.action == Action.LEAVE) {
+            PlacePosition pp;
+            if((pp = player.getCurrentPlace().canLeave(command.subject)) != null) {
+                actionExecutor.executeLeaveAction(pp, command);
+            }
+
         } else {
-            Location cp = player.getCurrentPosition();
+            Location cp = player.getCurrentLocation();
             if(cp.canDoAction(command.action)){
                 CanDoAction canDoAction = cp.getActionObject(command.subject);
-                if(canDoAction.hasAction(command.action)){
+                if(canDoAction != null && canDoAction.hasAction(command.action)){
                     canDoAction.act(player, command, output);
                 } else {
                     output.printInfoText("Can't do action: " + command.action);

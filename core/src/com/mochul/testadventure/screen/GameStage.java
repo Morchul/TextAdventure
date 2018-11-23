@@ -9,10 +9,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.mochul.testadventure.Assets;
+import com.mochul.testadventure.DescriptionCreator;
 import com.mochul.testadventure.actions.Action;
 import com.mochul.testadventure.actions.ActionHandler;
 import com.mochul.testadventure.actions.Command;
-import com.mochul.testadventure.object.Item;
 import com.mochul.testadventure.place.*;
 import com.mochul.testadventure.player.Player;
 import com.mochul.testadventure.ui.ConsoleOutput;
@@ -51,31 +51,37 @@ public class GameStage implements Screen, GameScreen {
 
         actionHandler = new ActionHandler(output, player);
 
-        Place place = new Place(IDs.START_PLACE, "StartPlace", 0, 1);
-        place.setDescription("This is the start place, here is {0}");
-        Place forest = new Place(IDs.FOREST, "Forest", 0, 2);
-        forest.setDescription("You are in a dark forest there is a {1}");
+        final Place place = new Place(IDs.START_PLACE, "StartPlace", 0, 1);
+        place.setDetailedDescription("This is the start place, here is {0}");
+        final Place forest = new Place(IDs.FOREST, "Forest", 0, 4);
+        forest.setDetailedDescription("You are in a dark forest there is a {1} with {2} and {3}");
 
-        PlacePosition conToForest = new PlacePosition(IDs.CON_START_PLACE_FOREST, "Forest", 0, 0, place, forest);
+        final PlacePosition conToForest = new PlacePosition(IDs.CON_START_PLACE_FOREST, "Forest", 0, 0, place, forest);
         conToForest.setDescription("A street go to a [forest]");
         conToForest.setDetailedDescription("You follow the street to a forest");
-        PlacePosition conToStartPlace = new PlacePosition(IDs.CON_FOREST_START_PLACE, "StartPlace", 0, 0, forest, place);
+        final PlacePosition conToStartPlace = new PlacePosition(IDs.CON_FOREST_START_PLACE, "StartPlace", 0, 0, forest, place);
         conToStartPlace.setDetailedDescription("You follow the street to east");
 
         place.setWest(conToForest);
         forest.setEast(conToStartPlace);
 
-        Place forestHouse = new Place(IDs.FOREST_HOUSE, "ForestHouse", 1, 2);
-        forestHouse.setDescription("In the house it's warm.");
+        final Place forestHouse = new Place(IDs.FOREST_HOUSE, "ForestHouse", 1, 2);
+        forestHouse.setDescription("A living room with {1} and a burning fire");
+        forestHouse.setDetailedDescription("In the house it's warm because of the burning fire and there is {1}.");
 
-        final PlacePosition conToHouse = new PlacePosition(4, "ForestHouse", 0,1,forest, forestHouse);
-        conToHouse.setDescription("[ForestHouse] with {0}");
-        conToHouse.setDetailedDescription("You go in the foresthouse");
-        final PlacePosition conFromHouseToForest = new PlacePosition(5, "Forest", 0, 1, forestHouse, forest);
+        final PlacePosition conToHouse = new PlacePosition(4, "ForestHouse", 0, 0,forest, forestHouse);
+        conToHouse.setDescription("[ForestHouse]");
+        conToHouse.setDetailedDescription("You go in the forestHouse");
+
+        final PlacePosition conFromHouseToForest = new PlacePosition(5, "Forest", 0, 0, forestHouse, forest);
+        conFromHouseToForest.setDetailedDescription("You leave the [ForestHouse] and go to forest");
+        forestHouse.setLeavePosition(conFromHouseToForest);
+
+
         conToHouse.passable = false;
         conFromHouseToForest.passable = false;
 
-        Item forestHouseDoor = new Item(IDs.FOREST_HOUSE_DOOR, "Door", 2, "a solid closed wood [door]") {
+        final Position forestHouseDoor = new Position(6, "Door", 2, 0, forest){
             @Override
             public boolean act(Player player, Command command, Output output) {
                 if(command.action == Action.OPEN) {
@@ -94,20 +100,35 @@ public class GameStage implements Screen, GameScreen {
                 return false;
             }
         };
+        forestHouseDoor.setDescription("a [Door]");
+        forestHouseDoor.setDetailedDescription("You stay before a solid closed wood [door]");
         forestHouseDoor.addAction(Action.OPEN);
         forestHouseDoor.addAction(Action.CLOSE);
 
-        conToHouse.addItem(forestHouseDoor);
-        conFromHouseToForest.addItem(forestHouseDoor);
+        final Position forestHouseWindow = new Position(7, "Window", 1, 0, forest){
+            @Override
+            public boolean act(Player player, Command command, Output output) {
+                if(command.action == Action.LOOK){
+                    output.printInfoText("You see " + DescriptionCreator.createDescription(forestHouse.getDescription(), forestHouse.getChildren()));
+                }
+                return false;
+            }
+        };
+        forestHouseWindow.setDescription("a [window]");
+        forestHouseWindow.setDetailedDescription("a small [window] with a little black border");
+        forestHouseWindow.addAction(Action.LOOK);
 
         Position table = new Position(6, "Table", 0, 2, forestHouse);
+        table.setDescription("a table");
+        table.setDetailedDescription("a wood table, on the wood table lies {0}");
 
         setStartLocationOfPlayer(place);
 
     }
 
     public void setStartLocationOfPlayer(Location startPosition){
-        player.setCurrentPosition(startPosition);
+        player.setCurrentLocation(startPosition);
+        startPosition.goToThisLocation(output);
 
     }
 

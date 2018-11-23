@@ -16,14 +16,25 @@ public class ActionExecutor {
         this.player = player;
     }
 
+    public void executeLeaveAction(PlacePosition pp, Command command){
+        if(pp.passable){
+            pp.goToThisLocation(output);
+            Place p = pp.getPlace();
+            p.goToThisLocation(output);
+            player.setCurrentLocation(p);
+        } else {
+            output.printInfoText("Can't leave " + command.subject);
+        }
+    }
+
     public boolean executeGoAction(Position nextPosition, Command command){
         if(nextPosition instanceof PlacePosition){
-            nextPosition.goToThisLocation(output);
 
             if(nextPosition.passable){
+                nextPosition.goToThisLocation(output);
                 Place p = ((PlacePosition) nextPosition).getPlace();
                 p.goToThisLocation(output);
-                player.setCurrentPosition(p);
+                player.setCurrentLocation(p);
                 return true;
             } else {
                 output.printInfoText("Can't go to " + command.subject);
@@ -31,9 +42,8 @@ public class ActionExecutor {
 
         } else {
             if(nextPosition.passable) {
-                output.printPositionText(nextPosition.getDetailedDescription());
                 nextPosition.goToThisLocation(output);
-                player.setCurrentPosition(nextPosition);
+                player.setCurrentLocation(nextPosition);
                 return true;
             } else {
                 output.printInfoText("Can't go to " + command.subject);

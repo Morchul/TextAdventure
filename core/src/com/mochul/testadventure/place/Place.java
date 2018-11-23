@@ -13,6 +13,7 @@ public class Place implements Location {
     private long ID;
     private String name;
     private String description;
+    private String detailedDescription;
 
     private Item[] items;
     private int itemIndex = 0;
@@ -37,11 +38,16 @@ public class Place implements Location {
         this.children = new Child[countOfItems + countOfPositions];
         this.name = name;
         this.description = "";
+        this.detailedDescription = "";
     }
 
     @Override
     public void goToThisLocation(Output output){
-        output.printPlaceText(DescriptionCreator.createDescription(description, children));
+        output.printPlaceText(DescriptionCreator.createDescription(detailedDescription, children));
+    }
+
+    public void setDetailedDescription(String detailedDescription){
+        this.detailedDescription = detailedDescription;
     }
 
     @Override
@@ -55,7 +61,7 @@ public class Place implements Location {
         return false;
     }
 
-    public Position canLeave(String name){
+    public PlacePosition canLeave(String name){
         if(name.equalsIgnoreCase(this.name)){
             if(leavePosition != null)
                 return leavePosition;

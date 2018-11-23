@@ -2,7 +2,6 @@ package com.mochul.testadventure.actions;
 
 import com.mochul.testadventure.place.Location;
 import com.mochul.testadventure.place.Place;
-import com.mochul.testadventure.place.PlacePosition;
 import com.mochul.testadventure.place.Position;
 import com.mochul.testadventure.player.Player;
 import com.mochul.testadventure.ui.Output;
@@ -18,14 +17,7 @@ public class ActionInterpreter {
     }
 
     public Position goAction(Command command){
-        Location currentLocation = player.getCurrentPosition();
-        Place p = null;
-
-        if(currentLocation instanceof Place){
-            p = (Place)currentLocation;
-        } else if(currentLocation instanceof Position){
-            p = ((Position)currentLocation).getParentPlace();
-        }
+        Place p = player.getCurrentPlace();
 
         if(p == null) return null;
 
