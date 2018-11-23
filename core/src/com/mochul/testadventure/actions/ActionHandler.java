@@ -29,9 +29,11 @@ public class ActionHandler {
 
         if(command.action == Action.GO){
             Position nextLocation = actionInterpreter.goAction(command);
-            if(nextLocation != null)
-                actionExecutor.executeGoAction(nextLocation, command);
-            else
+            if(nextLocation != null){
+                if(!actionExecutor.executeGoAction(nextLocation, command)){
+                    //Do something if execute go action return false
+                }
+            } else
                 output.printInfoText("Can't go to " + command.subject);
         } else {
             Location cp = player.getCurrentPosition();

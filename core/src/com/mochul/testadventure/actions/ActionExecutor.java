@@ -1,6 +1,5 @@
 package com.mochul.testadventure.actions;
 
-import com.mochul.testadventure.DescriptionCreator;
 import com.mochul.testadventure.place.Place;
 import com.mochul.testadventure.place.PlacePosition;
 import com.mochul.testadventure.place.Position;
@@ -19,12 +18,13 @@ public class ActionExecutor {
 
     public boolean executeGoAction(Position nextPosition, Command command){
         if(nextPosition instanceof PlacePosition){
-            nextPosition.act(player, command, output);
+            nextPosition.goToThisLocation(output);
 
             if(nextPosition.passable){
                 Place p = ((PlacePosition) nextPosition).getPlace();
-                p.goToThisPlace(player, command, output);
+                p.goToThisLocation(output);
                 player.setCurrentPosition(p);
+                return true;
             } else {
                 output.printInfoText("Can't go to " + command.subject);
             }
@@ -32,8 +32,9 @@ public class ActionExecutor {
         } else {
             if(nextPosition.passable) {
                 output.printPositionText(nextPosition.getDetailedDescription());
-                nextPosition.act(player, command, output);
+                nextPosition.goToThisLocation(output);
                 player.setCurrentPosition(nextPosition);
+                return true;
             } else {
                 output.printInfoText("Can't go to " + command.subject);
             }

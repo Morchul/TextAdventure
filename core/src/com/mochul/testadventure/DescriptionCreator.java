@@ -9,21 +9,20 @@ public class DescriptionCreator {
     }
 
     public static String createDescription(String description, Everything[] children){
-        String[] parts = description.split("\\{}");
+
         StringBuilder builder = new StringBuilder(children.length * 2 + 1);
 
-        if(description.endsWith("{}")){
-            for(int i = 0; i < parts.length; ++i){
-                builder.append(parts[i]);
-                builder.append(children[i].getDescription());
+        int b = 0, e;
+        for(int i = 0; i < description.length(); ++i){
+            if(description.charAt(i) == '{'){
+                e = i;
+                builder.append(description.substring(b, e));
+                builder.append(children[description.charAt(i + 1) - 48].getDescription());
+                b = i + 3;
             }
-
-        } else {
-            for(int i = 0; i < parts.length - 1 ; ++i){
-                builder.append(parts[i]);
-                builder.append(children[i].getDescription());
-            }
-            builder.append(parts[parts.length - 1]);
+        }
+        if(b < description.length()){
+            builder.append(description.substring(b));
         }
 
         return builder.toString();

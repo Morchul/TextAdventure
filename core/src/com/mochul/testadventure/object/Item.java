@@ -12,17 +12,13 @@ public abstract class Item implements CanDoAction, Child {
     private String name;
     private String description;
 
-    private Location parentLocation;
-
     private Action[] actions;
     private int actionIndex = 0;
 
-    public Item(long ID, String name, int countOfActions, Location parentLocation, String defaultDescription){
+    public Item(long ID, String name, int countOfActions, String defaultDescription){
         this.ID = ID;
         this.name = name;
         this.actions = new Action[countOfActions];
-        this.parentLocation = parentLocation;
-//        this.parentLocation.addItem(this);
         description = defaultDescription;
     }
 
@@ -50,10 +46,6 @@ public abstract class Item implements CanDoAction, Child {
     @Override
     public void addAction(Action action) {
         actions[actionIndex++] = action;
-    }
-
-    public Location getParentLocation(){
-        return parentLocation;
     }
 
     @Override

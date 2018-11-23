@@ -52,40 +52,43 @@ public class GameStage implements Screen, GameScreen {
         actionHandler = new ActionHandler(output, player);
 
         Place place = new Place(IDs.START_PLACE, "StartPlace", 0, 1);
-        place.setDescription("Description of Start Place");
+        place.setDescription("This is the start place, here is {0}");
         Place forest = new Place(IDs.FOREST, "Forest", 0, 2);
-        forest.setDescription("You are in a dark forest with a [ForestHouse]");
+        forest.setDescription("You are in a dark forest there is a {1}");
 
         PlacePosition conToForest = new PlacePosition(IDs.CON_START_PLACE_FOREST, "Forest", 0, 0, place, forest);
-        conToForest.setDescription("You follow the street to a forest");
+        conToForest.setDescription("A street go to a [forest]");
+        conToForest.setDetailedDescription("You follow the street to a forest");
         PlacePosition conToStartPlace = new PlacePosition(IDs.CON_FOREST_START_PLACE, "StartPlace", 0, 0, forest, place);
-        conToStartPlace.setDescription("You follow the street to east");
+        conToStartPlace.setDetailedDescription("You follow the street to east");
 
         place.setWest(conToForest);
         forest.setEast(conToStartPlace);
 
         Place forestHouse = new Place(IDs.FOREST_HOUSE, "ForestHouse", 1, 2);
-        forestHouse.setDescription("In the house it's warm. You can see a [door] a [table] and a [candle]");
+        forestHouse.setDescription("In the house it's warm.");
 
         final PlacePosition conToHouse = new PlacePosition(4, "ForestHouse", 0,1,forest, forestHouse);
+        conToHouse.setDescription("[ForestHouse] with {0}");
+        conToHouse.setDetailedDescription("You go in the foresthouse");
         final PlacePosition conFromHouseToForest = new PlacePosition(5, "Forest", 0, 1, forestHouse, forest);
         conToHouse.passable = false;
         conFromHouseToForest.passable = false;
 
-        Item forestHouseDoor = new Item(IDs.FOREST_HOUSE_DOOR, "Door", 2, conToHouse, "A solid closed wood [door]") {
+        Item forestHouseDoor = new Item(IDs.FOREST_HOUSE_DOOR, "Door", 2, "a solid closed wood [door]") {
             @Override
             public boolean act(Player player, Command command, Output output) {
                 if(command.action == Action.OPEN) {
                     output.printInfoText("You open the door");
                     conToHouse.passable = true;
                     conFromHouseToForest.passable = true;
-                    setDescription("A solid open wood door");
+                    setDescription("a solid open wood [door]");
                     return true;
                 } else if(command.action == Action.CLOSE){
                     output.printInfoText("You close the door");
                     conToHouse.passable = false;
                     conFromHouseToForest.passable = false;
-                    setDescription("A solid closed wood door");
+                    setDescription("a solid closed wood [door]");
                     return true;
                 }
                 return false;
@@ -94,9 +97,10 @@ public class GameStage implements Screen, GameScreen {
         forestHouseDoor.addAction(Action.OPEN);
         forestHouseDoor.addAction(Action.CLOSE);
 
-
         conToHouse.addItem(forestHouseDoor);
         conFromHouseToForest.addItem(forestHouseDoor);
+
+        Position table = new Position(6, "Table", 0, 2, forestHouse);
 
         setStartLocationOfPlayer(place);
 

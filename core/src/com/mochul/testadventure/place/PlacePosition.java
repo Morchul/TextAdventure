@@ -1,9 +1,5 @@
 package com.mochul.testadventure.place;
 
-import com.mochul.testadventure.actions.Command;
-import com.mochul.testadventure.player.Player;
-import com.mochul.testadventure.ui.Output;
-
 public class PlacePosition extends Position {
 
     private Place otherPlace;
@@ -15,11 +11,5 @@ public class PlacePosition extends Position {
 
     public Place getPlace(){
         return otherPlace;
-    }
-
-    @Override
-    public boolean act(Player player, Command command, Output output) {
-        output.printPositionText(getDescription());
-        return false;
     }
 }

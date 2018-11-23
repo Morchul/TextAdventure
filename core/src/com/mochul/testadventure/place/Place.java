@@ -1,5 +1,6 @@
 package com.mochul.testadventure.place;
 
+import com.mochul.testadventure.DescriptionCreator;
 import com.mochul.testadventure.actions.Action;
 import com.mochul.testadventure.actions.CanDoAction;
 import com.mochul.testadventure.actions.Command;
@@ -38,8 +39,9 @@ public class Place implements Location {
         this.description = "";
     }
 
-    public void goToThisPlace(Player player, Command command, Output output){
-        output.printPlaceText(description);
+    @Override
+    public void goToThisLocation(Output output){
+        output.printPlaceText(DescriptionCreator.createDescription(description, children));
     }
 
     @Override

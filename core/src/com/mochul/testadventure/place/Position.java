@@ -1,10 +1,14 @@
 package com.mochul.testadventure.place;
 
+import com.mochul.testadventure.DescriptionCreator;
 import com.mochul.testadventure.actions.Action;
 import com.mochul.testadventure.actions.CanDoAction;
+import com.mochul.testadventure.actions.Command;
 import com.mochul.testadventure.object.Item;
+import com.mochul.testadventure.player.Player;
+import com.mochul.testadventure.ui.Output;
 
-public abstract class Position implements PositionInterface {
+public class Position implements PositionInterface {
 
     private long ID;
     private String name;
@@ -41,6 +45,9 @@ public abstract class Position implements PositionInterface {
         }
         return false;
     }
+
+    @Override
+    public boolean act(Player player, Command command, Output output) { return false; }
 
     @Override
     public boolean hasAction(Action action) {
@@ -92,6 +99,11 @@ public abstract class Position implements PositionInterface {
     @Override
     public Child[] getChildren() {
         return items;
+    }
+
+    @Override
+    public void goToThisLocation(Output output) {
+        output.printPositionText(DescriptionCreator.createDescription(detailedDescription, getChildren()));
     }
 
     public Place getParentPlace() {
